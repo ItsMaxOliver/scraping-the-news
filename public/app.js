@@ -22,7 +22,7 @@ $(document).ready(function () {
       data.forEach(function(savedArticle) {
         $("#saved-articles").append("<p data-id='" + savedArticle._id + "'>" + savedArticle.title + "<br /> <a href='https://www.latimes.com'" + savedArticle.link + " target='_blank'>" + 'https://www.latimes.com' + savedArticle.link + "<br />" + savedArticle.summary + "</p>");
         if (savedArticle.note) {
-          $("#articles").append("<p data-id='" + article.note._id + "'>" + article.note.body + "</p>");
+          $("#articles").append("<p data-id='" + savedArticle.note._id + "'>" + savedArticle.note.body + "</p>");
         }
         $("#saved-articles").append("<button data-id='" + savedArticle._id + "' id='removearticle'>Remove Article</button>");
         $("#saved-articles").append("<button data-id='" + savedArticle._id + "' id='addnote' data-toggle='modal' data-target='#note-modal'>Add A Comment</button>");
@@ -35,12 +35,6 @@ $("#note-modal").on("show.bs.modal", function(e) {
   var artId = $(e.relatedTarget).attr("data-id");
 
   $("#save-note").attr("data-id", artId);
-
-  var artTitle = $(e.relatedTarget);
-  console.log(JSON.stringify(artTitle));
-
-
-  $(this).find(".note-title").html("Note for: " + artTitle);
 });
 
 // When you click the save note button
@@ -55,17 +49,18 @@ $("#save-note").on("click", function () {
       // Run a POST request to add the note, using what's entered in the inputs
       $.ajax({
           method: "POST",
-          url: "/api/articles/" + articleId,
+          url: "/api/articles/" + $("#save-note").attr("data-id"),
           data: {
               // Value taken from note textarea
               body: noteBody
           }
       })
-      .then(function getNote(articleId) {
-        $.get("/api/articles/" + articleId, function (dbArticle) {
-          var note = dbArticle.note;
-          var p = $("<p>");
-          p.text(note);
+      .then(function getNote(artId) {
+        $.get("/api/articles/" + artId._id, function (dbArticle) {
+
+          var comment = dbArticle.note.body;
+
+          var p = $("<p>"+ comment +"</p>");
           $(".note-container").append(p);
         });
       });
