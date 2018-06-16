@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const handle = require("express-handlebars");
 
-const PORT = 3000;
+const PORT =process.env.PORT || 3000;
 
 // Initialize Express
 const app = express();
