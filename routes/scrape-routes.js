@@ -7,7 +7,7 @@ const db = require("../models");
 
 module.exports = function (app) {
     // A GET route for scraping the latimes website
-    app.get("/scrape", function (req, res) {
+    app.get("/", function (req, res) {
 
         axios.get("http://www.latimes.com/").then(function (response) {
             // Then, we load that into cheerio and save it to $ for a shorthand selector
